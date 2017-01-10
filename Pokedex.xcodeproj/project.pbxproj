@@ -12,6 +12,7 @@
 		893D85541E2561A7000E6759 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 893D85521E2561A7000E6759 /* Main.storyboard */; };
 		893D85561E2561A7000E6759 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 893D85551E2561A7000E6759 /* Assets.xcassets */; };
 		893D85591E2561A7000E6759 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 893D85571E2561A7000E6759 /* LaunchScreen.storyboard */; };
+		893D85611E2565CB000E6759 /* pokemon.csv in Resources */ = {isa = PBXBuildFile; fileRef = 893D85601E2565CB000E6759 /* pokemon.csv */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		893D85551E2561A7000E6759 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		893D85581E2561A7000E6759 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		893D855A1E2561A7000E6759 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		893D85601E2565CB000E6759 /* pokemon.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = pokemon.csv; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 				893D85501E2561A7000E6759 /* ViewController.swift */,
 				893D85521E2561A7000E6759 /* Main.storyboard */,
 				893D85551E2561A7000E6759 /* Assets.xcassets */,
+				893D85601E2565CB000E6759 /* pokemon.csv */,
 				893D85571E2561A7000E6759 /* LaunchScreen.storyboard */,
 				893D855A1E2561A7000E6759 /* Info.plist */,
 			);
@@ -126,6 +129,7 @@
 			files = (
 				893D85591E2561A7000E6759 /* LaunchScreen.storyboard in Resources */,
 				893D85561E2561A7000E6759 /* Assets.xcassets in Resources */,
+				893D85611E2565CB000E6759 /* pokemon.csv in Resources */,
 				893D85541E2561A7000E6759 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
