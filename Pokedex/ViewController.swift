@@ -120,8 +120,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
 // When item in collection view is selected, func
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    // since we made a segue we wanted to connect two view controllers (not by connecting a cell to the desired vc)... here will be what happens when someone presses cell... we will "take the segue" to the next view.
+        var poke: Pokemon! // we're creating a variable called poke, of Pokemon class... if we're in search mode then we can take it from filtered pokemon list, otherwise we can take it from the regular list.
         
-    }
+        if inSearchMode {
+            poke = filteredPokemon[indexPath.row]
+        } else {
+            poke = pokemon[indexPath.row]
+        }
+                                                    // since "poke" it can be from either list
+        performSegue(withIdentifier: "PokemonDetailVC", sender: poke)
+                                // perform segue to PokemonDetailsVC and send in "poke"... 
+}
     
 // States the number of items in the collection, in our case the png .count
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -180,12 +190,25 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             let lower = searchBar.text!.lowercased()
           
     // Saying that the filtered pokemon list is equal to the original list but it's filtered.. and we filter it as $0 (placeholder of any or all obj in original array) taking the name for that, and saying is what we put in the search bar contained inside of that name, and if it is we are going to put it into the filtered pokemon list.
+            
             filteredPokemon = pokemon.filter({$0.name.range(of: lower) != nil})
             collection.reloadData() // that will repopulate the collection view with the new data. 
-            
     }
             
 }
+    // get the function that will get this segue ready to occur...
+    // happens before segue occurs and this is where we can set data up to be passed between vc's
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "PokemonDetailVC" { // in above segue
+        if let detailsVC = segue.destination as? PokemonDetailVC { // new var in pokemondetailsVC
+                if let poke = sender as? Pokemon { // poke is sender of class Pokemon
+                    detailsVC.pokemon = poke // use detailsVC which we defined as destinationVC
+                                            // the destinationVC that contains "pokemon", we're setting it to this VC's ("poke") variable poke. 
+                    
+                }
+            }
+        }
+    }
 }
     
     
