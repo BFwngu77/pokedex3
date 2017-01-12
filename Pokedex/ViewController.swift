@@ -7,27 +7,62 @@
 //
 
 import UIKit
-                                        // Add these three things
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
+import AVFoundation // did this when we created the music button
+
 //delegate: shows this class is delegate for collection view
 // data source: says this will hold daya dor collection view
-// flow layout: protocol used to modify and set the settings for the layout for the collection view. 
+// flow layout: protocol used to modify and set the settings for the layout for the collection view.
 // Each UI thing has it's own
+// Need a method that will check for each time a keystroke is made, that's what UISearchBarDel is for.
+
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
 
 // b/c it's tied to the storyboard
     @IBOutlet weak var collection: UICollectionView!
+// need to connect the search bar
+    @IBOutlet weak var searchBar: UISearchBar!
+
     
     var pokemon = [Pokemon]() // created and initialized an array of type pokemon...
-
+    
+    var filteredPokemon = [Pokemon]() // created and initialized as an empty array of type Pokemon...
+    
+    var inSearchMode = false // need this boolean for in search mode in order to help the search bar function work
+    
+    var musicPlayer: AVAudioPlayer! // need a music player variable
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 // assign the delegate and datasource to self, however,unless we create an array of pokemon, which we did above, there was no data going in..
         collection.dataSource = self
         collection.delegate = self
+        searchBar.delegate = self
         
+        searchBar.returnKeyType = UIReturnKeyType.done // also when you press done key it will remove the keyboard...
+    
         parsePokemonCSV()
+        initaudio() // turn on music upon view load...
     }
+    
+    // above we created the music player variable, but now we will initialize it here..
+    func initaudio(){
+        // need to create a path to the music... the
+        let path = Bundle.main.path(forResource: "music", ofType: "mp3")!
+        // since this can throw an error we will add a do and catch statement...
+        
+        do {                                // referring to the path var above
+            musicPlayer = try AVAudioPlayer(contentsOf: URL(string: path)!)
+            musicPlayer.prepareToPlay() // get it ready for playing
+            musicPlayer.numberOfLoops = -1 //loops continuously
+            musicPlayer.play() // play it..
+            
+        } catch let err as NSError {
+            print(err.debugDescription)
+    }
+            
+}
+    
 // Next we must create a function that will parse the data from the csv and put it into a form that is used to us
     func parsePokemonCSV(){
 //first we need a path to the csv file.
@@ -60,9 +95,21 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PokeCell" , for: indexPath) as? PokeCell {
 // Next we want to create dynamic cells that don't just output our prorotype cell multiple times
             // This is the pokemon object... taking the pokemon at indexpath.row and assigning it to poke
-            let poke = pokemon[indexPath.row]
-            // This grabs the correct cell inputs from pokecell and combines it with the cell information passed in on the main VC..
-            cell.configureCell(poke) // will assign name and thumb image to pokecell
+            let poke: Pokemon!
+            // next will show two options for the cell view depending on if anything was in the search bar, etc.
+            if inSearchMode {
+                
+                poke = filteredPokemon[indexPath.row]
+                cell.configureCell(poke)
+                
+            } else {
+                
+                poke = pokemon[indexPath.row]
+                cell.configureCell(poke)
+            
+                // This grabs the correct cell inputs from pokecell and combines it with the cell information passed in on the main VC..
+                // will assign name and thumb image to pokecell
+            }
             
             return cell // if we can grab one of those dequeued then do it" otherwise return an empty generic cell...
             
@@ -78,6 +125,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
 // States the number of items in the collection, in our case the png .count
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if inSearchMode {
+            return filteredPokemon.count
+            
+        }
         return pokemon.count // as many that are in the array
     }
     
@@ -92,6 +143,52 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         return CGSize(width: 105, height: 105)
     }
     
+    // created this for the aciton of pressing the music button
+    @IBAction func musicBtnPressed(_ sender: UIButton) {
+        // bc the music is playing we will need to find a way for it to stop when we press it...
+        if musicPlayer.isPlaying {
+            musicPlayer.pause()
+            // when playing, it's fully opaque
+            sender.alpha = 0.2
+       
+        } else {
+            musicPlayer.play()
+            // when paused, it's fully
+            sender.alpha = 1.0
+        }
+    }
     
+    // anytime we make a change in the searchBar, whatever is in here is going to be called...
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        view.endEditing(true)
+        // also want to remove the keyboard when search bar is clicked, not only when out of search mode...
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // we want it to show full list when not searching... default
+        // when we search, we want the array to change... so we need to create a new array (filter)
+        // Below explains what it means to be insearchmode by displaying default settings vs non-default, etc... 
+        
+        if searchBar.text == nil || searchBar.text == "" {
+            inSearchMode = false
+            collection.reloadData() // we're saying, if the search bar is empty, we will revert back to original list of filtered pokemon.
+            view.endEditing(true) // will remove keyboard at this point
+        } else{
+            inSearchMode = true
+            
+            let lower = searchBar.text!.lowercased()
+          
+    // Saying that the filtered pokemon list is equal to the original list but it's filtered.. and we filter it as $0 (placeholder of any or all obj in original array) taking the name for that, and saying is what we put in the search bar contained inside of that name, and if it is we are going to put it into the filtered pokemon list.
+            filteredPokemon = pokemon.filter({$0.name.range(of: lower) != nil})
+            collection.reloadData() // that will repopulate the collection view with the new data. 
+            
+    }
+            
 }
+}
+    
+    
+
+
 
