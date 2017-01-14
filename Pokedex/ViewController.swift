@@ -118,6 +118,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
     } // this bracket ends the dequeue and setting up of cells
     
+    
+    
 // When item in collection view is selected, func
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     // since we made a segue we wanted to connect two view controllers (not by connecting a cell to the desired vc)... here will be what happens when someone presses cell... we will "take the segue" to the next view.
